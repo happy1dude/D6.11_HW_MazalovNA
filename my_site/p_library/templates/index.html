@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block navigate %}
+<ul class="nav nav-pills nav-fill text-center" style="background-color: #e3f2fd;">
+    <li class="nav-item text-center">
+        <a class="nav-link active" href="/">Книги</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-info" href="/author/">Авторы</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-info" href="/publishers/">Издательства</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-info" href="/friend/">Друзья</a>
+    </li>
+</ul>
+{% endblock %}
+
+
+{% block content %}
+<table class="table table-striped text-center" ">
+    <thead class="table-success">
+        <tr>
+            <th scope="col" style="vertical-align: middle">#</th>
+            <th scope="col" style="vertical-align: middle">Авторы</th>
+            <th scope="col" style="vertical-align: middle">Заголовок</th>
+            <th scope="col" style="vertical-align: middle">Год релиза</th>
+            <th scope="col" style="vertical-align: middle">Издательство</th>
+            <th scope="col" style="vertical-align: middle">Кол-во копий</th>
+            <th scope="col" style="vertical-align: middle">+</th>
+            <th scope="col" style="vertical-align: middle">-</th>
+            <th scope="col" style="vertical-align: middle">Друзья</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for book in books %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ book.author }}</td>
+                <td>{{ book }}</td>
+                <td>{{ book.year_release }}</td>
+                <td>{{ book.publisher }}</td>
+                <td>{{ book.copy_count }}</td>
+                <td>
+                    <form action="/index/book_increment/" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{ book.id }}">
+                        <input type="submit" value="+">
+                    </form>
+                </td>
+                <td>
+                    <form action="/index/book_decrement/" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{ book.id }}">
+                        <input style="padding-right: 12px;" type="submit" value="-">
+                    </form>
+                </td>
+                <td>{{ book.friend }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
